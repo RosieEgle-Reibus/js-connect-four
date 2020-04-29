@@ -56,11 +56,60 @@ class Connect4 {
 
          $board.on('click', '.col.empty', function() {
              const col = $(this).data('col')
+             const row = $(this).data('col')
              const $lastEmptyCell = findLastEmptyCell(col)
              $lastEmptyCell.removeClass(`empty next-${that.player}`)
              $lastEmptyCell.addClass(that.player )
+             $lastEmptyCell.data('player', that.player)
+
+             const winner = that.checkForWinner(row, col)
+             if(winner) {
+                  alert(`GAME OVER! Player ${that.player} has won!`)
+                  return
+             }
+
              that.player = (that.player === 'red') ? 'black' : 'red'
              $(this).trigger('mouseenter')
          })
+    }
+
+    
+
+    checkForWinner = (row, col ) => {
+        const that = this
+
+        $getCell = (i, j) => {
+            return $(`.col[data-row='${i}'][data-col='${j}']`)
+        }
+
+        checkDirection = (direction) => {
+             let total = 0
+             let i = row + direction.i
+             let j = col + direction.j 
+             let $next = $getCell(i, j)
+             while(i >= 0 && i < that.ROWS && j >= 0 && j < that.COLS && $next.data('player') === that.player)  {
+                 total++
+                 i += step.i
+                 j += step.j
+                 $next = $getCell(i, j)
+             }
+        }
+
+        checkWin = (directionA, directionB) => {
+            const total = 1 +
+            checkDirection(a)
+            checkDirection(b )
+            if(total >= 4) {
+                return that.player
+            } else {
+                return null 
+            }
+        }
+
+        checkVerticals = () => {
+            return this.checkWin({i: -1, j: 0}, {i: 1, j: 0} )
+       }
+         
+        return checkVerticals()
     }
 }
